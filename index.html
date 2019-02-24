@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Service Worker Template</title>
+        <!-- Tell the browser about the service worker -->
+        <link rel="serviceworker" href="/serviceworker.js">
+    </head>
+    <body>
+        <script>
+            navigator.serviceWorker.register('/serviceworker.js');
+
+            // Geolocation feature detection
+            if (navigator.geolocation) {
+                // Your code goes here
+            }
+        </script>
+    </body>
+</html>
