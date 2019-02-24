@@ -12,12 +12,13 @@
             if (navigator.serviceWorker) {
                 // Register the service worker
                 navigator.serviceWorker.register('/serviceworker.js')
-                .then(function(){
-                    console.log('Success!');
+                .then(function(registration){
+                    console.log('Success!', registration.scope);
                 })
-                .catch(function(){
-                    console.error('Failure!');
+                .catch(function(error){
+                    console.error('Failure!', error);
                 });
+                console.log('All done.');
             }
 
             // Geolocation feature detection
