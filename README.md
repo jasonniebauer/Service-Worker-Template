@@ -1,2 +1,2 @@
-# service-worker-template
-A basline service worker template.
+# Service Worker Template
+A baseline service worker script.
