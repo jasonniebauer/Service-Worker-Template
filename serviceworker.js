@@ -5,9 +5,25 @@
     License: http://www.opensource.org/licenses/mit-license.php
 */
 
-addEventListener('install', function(event){
-    console.log('The service worker is installing...');
-});
+const staticCacheName = 'staticfiles';
+
+addEventListener('install', installEvent => {
+    installEvent.waitUntil(
+        caches.open(staticCacheName)
+        .then( staticCacheName => {
+            // Nice to have
+            staticCache.addAll([
+                '/path/to/font.woff',
+                '/path/to/icon.svg'
+            ]); // end addAll
+            // Must have
+            return staticCache.addAll([
+                '/path/to/stylesheet.css',
+                '/path/to/javascript.js'
+            ]); // end return addAll
+        }); // end open then
+    ); // end waitUntil
+}); // end addEventListener
 
 addEventListener('activate', function(event){
     console.log('The service worker is activated.');
