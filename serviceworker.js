@@ -29,18 +29,18 @@ addEventListener('activate', function(event){
     console.log('The service worker is activated.');
 });
 
+// When the browser requests a file...
 addEventListener('fetch', fetchEvent => {
     const request = fetchEvent.request;
     fetchEvent.respondWith(
-        fetch(request)
-        .then( responseFromFetch => {
-            return responseFromFetch;
-        }) // end fetch then
-        .catch(error => {
-           return new Response('<h1>Oops!</h1> <p>Something went wrong.</p>',
-           {
-               headers: {'Content-type': 'text/html; charset=utf-8'}
-           }); 
-        }) // end fetch catch
+        // First, look in the cache
+        caches.match(request)
+        .then( responseFromCache => {
+            if (responseFromCache) {
+                return responseFromCache;
+            } // end if
+            // Otherwise fetch from the network
+            return fetch(request);
+        }) // end match then
     ); // end respondWith
 }); // end addEventListener
