@@ -20,7 +20,8 @@ addEventListener('install', installEvent => {
             // Must have
             return staticCache.addAll([
                 '/path/to/stylesheet.css',
-                '/path/to/javascript.js'
+                '/path/to/javascript.js',
+                '/offline.html'
             ]); // end return addAll
         }); // end open then
     ); // end waitUntil
@@ -55,7 +56,11 @@ addEventListener('fetch', fetchEvent => {
                 return responseFromCache;
             } // end if
             // Otherwise fetch from the network
-            return fetch(request);
+            return fetch(request)
+            .catch( error => {
+                // Show a fallback page instead
+                return caches.match('/offline.html');
+            }); // end fetch catch return
         }) // end match then
     ); // end respondWith
 }); // end addEventListener
