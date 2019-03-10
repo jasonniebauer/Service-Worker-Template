@@ -29,7 +29,7 @@ addEventListener('install', installEvent => {
                 '/path/to/javascript.js',
                 '/offline.html'
             ]); // end return addAll
-        }); // end open then
+        }) // end open then
     ); // end waitUntil
 }); // end addEventListener
 
@@ -70,5 +70,42 @@ addEventListener('fetch', fetchEvent => {
                 }); // end fetch catch return
             }) // end match then
         ); // end respondWith
-    }
+    } // end if
+    if (request.headers.get('Accept').includes('image')) {
+        fetchEvent.respondWith(
+            // Look for a cached version of the image
+            caches.match(request)
+            .then( responseFromCache => {
+                if (responseFromCache) {
+                    return responseFromCache;
+                } // end if
+                // Otherwise fetch the image from the network
+                return fetch(request)
+                .then( responseFromFetch => {
+                    // Put a copy in the cache
+                    const copy = responseFromFetch.clone();
+                    fetchEvent.waitUntil(
+                        caches.open(imageCacheName)
+                        .then( imageCache => {
+                            return imageCache.put(request, copy);
+                        }) // end open then
+                    ); // end waitUntil
+                    return responseFromFetch;
+                }); // end fetch then and return
+            }) // end match then
+        ); // end respondWith
+        return; // Go no further
+    } // end if
+    // For everything else...
+    fetchEvent.respondWith(
+        // Look for a cached copy of the file
+        caches.match(request)
+        .then( responseFromCache => {
+            if (responseFromCache) {
+                return responseFromCache;
+            } // end if
+            // Otherwise fetch the file from the network
+            return fetch(request);
+        }) // end match then
+    ); // end respondWith
 }); // end addEventListener
